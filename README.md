@@ -29,12 +29,24 @@ We have made the following changes to the original system:
 ### Workload
 For this case study, we configured the following user behavior:
 1. Search for a flight
-2. Tokenize credit card details using [Stripe](https://stripe.com/)
-3. Place a charge on a credit card using [Stripe](https://stripe.com/)
-4. Book a flight
-5. List booked flights
-6. Display loyalty points
+2. Place a charge on a credit card using [Stripe](https://stripe.com/)
+3. Book a flight
+4. List booked flights
+5. Display loyalty points
 
-TODO Measurement plans
+The experiments are configured in the form of measurement plans that specify memory size of the functions, the experiment duration, the request rate, number of experiment repetitions, and the number of threats the load driver uses. The following example measurement plan
+´´´
+{
+   "name":"1024MB",
+   "branch":"1024MB",
+   "duration":600,
+   "load":200,
+   "repetitions":10,
+   "loadriverthreats":128
+}
+´´´
+configures an experiment with memory size of 1024 MB, an experiment duration of 600 seconds, 200 requests/second with 128 threats for the load driver that is repeated 10 times. The measurement plans in [TODO](TODO) contain the experiment configuration used for our first dataset. To configure other experiment setups, simply adapt the measurement plans in [TODO](TODO) before building the docker container (see [here](#Replicating-our-measurements)).
+
+### Replicating our measurements
 
 ## Measurement data and analysis scripts
