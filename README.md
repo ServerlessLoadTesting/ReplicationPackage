@@ -1,4 +1,4 @@
-# ReplicationPackage
+# Replication Package
 The replication package for our manuscript _A Case Study on the Stability of Performance Tests for Serverless Applications_ consists of two parts:
 * [Automated measurement harness for the airline booking case study](#Automated-measurement-harness-for-the-airline-booking-case-study)
 * [Collected measurement data and analysis scripts required to reproduce all results/figures from the paper](#Measurement-data-and-analysis-scripts)
@@ -12,6 +12,7 @@ This frontend sends queries to five backend APIs, as shown in figure below:
 <p align="center">
 <img src="https://github.com/ServerlessLoadTesting/ReplicationPackage/blob/main/images/serverlessairline.png?raw=true" width="800">
 </p>
+
 _Search Flights_, _Create Charge_, _Create Booking_, _List Bookings_, and _Get Loyalty_. The five APIs are implemented as GraphQL queries using AWS AppSync, a managed GraphQL service. 
 The _Search Flights_ API retrieves all flights for a given date, arrival airport and departure airport from a DynamoDB table using the DynamoDB GraphQL resolver. 
 The _Create Charge_ API places a charge on a credit card using Stripe, a SaaS payment provider. An API gateway triggers the execution of the _ChargeCard_ Lambda function, which manages the call to the stripe API. 
