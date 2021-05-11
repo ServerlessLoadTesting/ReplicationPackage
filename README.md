@@ -49,6 +49,23 @@ The experiments are configured in the form of measurement plans that specify mem
 
 The measurement plans in [TODO](TODO) contain the experiment configuration used for our first dataset. To configure other experiment setups, simply adapt the measurement plans in [TODO](TODO) before building the docker container (see [here](#Replicating-our-measurements)).
 
-### Replicating our measurements
+### Running the experiments
+To execute the measurements, run the following commands in the folder `AirlineBooking`:
+
+```
+docker build --build-arg AWS_ACCESS_KEY_ID=YOUR_PUBLIC_KEY --build-arg AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY . -t airlinebooking
+docker run -d --name airlinebooking airlinebooking
+docker exec -it airlinebooking bash /ReplicationPackage/FacialRecognition/runner.sh
+```
+
+Make sure to replace `YOUR_PUBLIC_KEY` and`YOUR_SECRET_KEY` with your [AWS Credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html). This first builds the docker container for the experiment environment, starts the docker container, and then starts the experiment runner. Every experiment execution takes around 3-4h, so depending on the configured experiments this process can run for multiple days
+
+To retrieve the collected monitoring data run the following command:
+```
+docker cp airlinebooking:/results .
+```
+If the experiments are still running, this command will retrieve the data for the already finished experiments.
+
+To setup a longitudinal study, configure the [measurement plans](#Workload) correspondingly and setup something to execute this task at a regular interval. We setup a solution using a a step functions workflow that is executed based on cloudwatch alarms, but a linux crontab solution would be sufficient.
 
 ## Measurement data and analysis scripts
