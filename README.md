@@ -1,7 +1,9 @@
 # Replication Package
 The replication package for our manuscript _A Case Study on the Stability of Performance Tests for Serverless Applications_ consists of two parts:
+
 * [Automated measurement harness for the airline booking case study](#Automated-measurement-harness-for-the-airline-booking-case-study)
 * [Collected measurement data and analysis scripts required to reproduce all results/figures from the paper](#Measurement-data-and-analysis-scripts)
+
 We provide the experiment harness as a Docker container that replicates all measurements conducted in this study with a single CLI command from any docker-capable machine. To simplify the reuse of this harness in other studies, experiments can be specified as JSON files, including measurement duration, load intensity, load pattern, measurement repetitions, and system configuration. The second part of our replication package is a CodeOcean capsule containing the collected measurement data and the scripts for the analysis presented in this paper. The CodeOcean capsule enables a 1-click replication of our analysis either on the measurement data we collected or on new measurement data collected using our measurement harness.
 
 ## Automated measurement harness for the airline booking case study
