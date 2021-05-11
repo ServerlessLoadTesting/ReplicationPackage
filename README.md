@@ -50,7 +50,7 @@ The experiments are configured in the form of measurement plans that specify mem
 }
 ```
 
-The measurement plans in [TODO](TODO) contain the experiment configuration used for our first dataset. To configure other experiment setups, simply adapt the measurement plans in [TODO](TODO) before building the docker container (see [here](#Replicating-our-measurements)).
+The measurement plans in `ServerlessAirline/measurementplans/` contain the experiment configuration used for our first dataset. To configure other experiment setups, simply adapt the measurement plans in `ServerlessAirline/measurementplans/` before building the docker container (see [here](#Replicating-our-measurements)).
 
 ### Running the experiments
 To execute the measurements, run the following commands in the folder `AirlineBooking`:
