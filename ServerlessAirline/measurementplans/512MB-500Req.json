@@ -1,0 +1,8 @@
+{
+   "name":"512MB-500Req",
+   "branch":"512MB",
+   "duration":900,
+   "load":500,
+   "repetitions":10,
+   "loadriverthreats":256
+}
