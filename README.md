@@ -27,5 +27,14 @@ We have made the following changes to the original system:
 * Enabled the higher throughput option of the System Manager Parameter Store.
 
 ### Workload
+For this case study, we configured the following user behavior:
+1. Search for a flight
+2. Tokenize credit card details using [Stripe](https://stripe.com/)
+3. Place a charge on a credit card using [Stripe](https://stripe.com/)
+4. Book a flight
+5. List booked flights
+6. Display loyalty points
+
+TODO Measurement plans
 
 ## Measurement data and analysis scripts
