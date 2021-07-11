@@ -80,19 +80,18 @@ https://doi.org/10.24433/CO.9900774.v1
 <img src="https://github.com/ServerlessLoadTesting/ReplicationPackage/blob/main/images/codeocean.png?raw=true" width="800">
 </p>
 
-### Viewing the reproducible results
-The results produced by the last reproducible run of the capsule, can be accessed in the area labled as "Results used in paper". This contains all results/tables/figures shown in the manuscript and some additional data, such as the plots from figure 5 for all evaluation functions.
+### Viewing, reproducing, and adapting the results/analysis
+The results produced by the last reproducible run of the capsule, can be accessed in the red area labled as "Results" This contains all results/tables/figures shown in the manuscript.
 
-If you want to rerun the compuations that generate the results/tables/figures from the manuscript, press the button labled as "Rerun all computation" in the screenshot above.
+If you want to rerun the compuations that generate the results/tables/figures from the manuscript, press the button labled as "Run analysis" (green) in the screenshot above.
 
-### Viewing the data from the manuscript
-The CodeOcean capsule also contains all data that was collected for this manuscript in the folder labled as "Data" in the screenshot above. It contains the following data:
+Aside from enabling simple reproducability, the CodeOcean capsule also allows to adapt the analysis. As an example, let's say we are interested in how often the warmup analysis would be impacted by changing the stepsize in the heuristic to 10s. This requires only to edit the `RQ1_analyze_warmup.py` file to set the variable `window_size_secs` to 010 (no need to be shy, CodeOcean creates a private copy of the capsule when you start editing) and press the "Reproducible Run" button. After some computation time, there will be a new folder in the right bar, that shows the results for this run.
 
-* `duration-calibration`: data used to determine how long each measurement for the synthetic dataset should be to guarantee stable metrics.
-* `motivating-example`: data from the motivating example (Figure 1), kindly provided to us by Alex Casalboni.
-* `validation`: Ten repretitons of measurements obtained for our three case study applications, obtained using the measurement harnesses described above.
-* `dataset_with_labels`: Synthetic training dataset covering 2.000 application/12.000 measurements obtained using the synthetic function generator as described above.
+### Viewing/downloading the data from the manuscript
+The CodeOcean capsule also contains all data that was collected for this manuscript in the folder labled as "Datasets" (purple) in the screenshot above. It contains the following data:
 
+* `repetition-data`: This dataset consists of measurements with 5 req/s, 25 req/s, 50 req/s, 100 req/s, 250 req/s, and 500 req/s and memory sizes of the lambda functions between 256 MB, 512 MB,  and 1024 MB. For each measurement, the SAB is deployed, put under load for 15 minutes, and then torn down again. We perform ten repetitions of each measurement to account for cloud performance variability.These measurements started on July 5th, 2020, and continuously ran until July 17th, 2020.
+* `longitudinal_data.csv`: Dataset from our longitudinal study consists of three measurement repetitions with 100 req/s and 512 MB every day at 19:00 from August 20th, 2020 to June 20th, 2021. This dataset is preprocessed as the raw dataset was too large for CodeOcean. The raw dataset is available upon request from the first author.
 
-### Adapting the capsule
-Aside from enabling simple reproducability, the CodeOcean capsule also allows to adapt the analysis. As an example, let's say we are interested in how often our approach selects the optimal memorysize for a tradeoff factor of 0.6 (only shown in the paper for 0.75, 0.5, and 0.25) and what the resulting cost/performance benefits would be. This requires only to edit the `evaluation.py` file to set the variable `tradeoff` to 0.6 (no need to be shy, CodeOcean creates a private copy of the capsule when you start editing) and press the "Reproducible Run" button. After some computation time, there will be a new folder in the right bar, that shows the results for this run.
+### Analysis Scripts
+
