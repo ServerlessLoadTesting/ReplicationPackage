@@ -77,7 +77,7 @@ All measurement data collected for our manuscript is publically available togeth
 https://doi.org/10.24433/CO.9900774.v1
 
 <p align="center">
-<img src="https://github.com/Sizeless/ReplicationPackage/blob/main/images/Codeocean.png?raw=true" width="800">
+<img src="https://github.com/ServerlessLoadTesting/ReplicationPackage/blob/main/images/codeocean.png?raw=true" width="800">
 </p>
 
 ### Viewing the reproducible results
