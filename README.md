@@ -72,3 +72,27 @@ If the experiments are still running, this command will retrieve the data for th
 To setup a longitudinal study, configure the [measurement plans](#Workload) correspondingly and setup something to execute this task at a regular interval. We setup a solution using a a step functions workflow that is executed based on cloudwatch alarms, but a linux crontab solution would be sufficient.
 
 ## Measurement data and analysis scripts
+All measurement data collected for our manuscript is publically available together with all analysis scripts used in our analysis and to generate any figures shown in the manuscript. For this part of our replication package, we use CodeOcean, which generates a standard, secure, and executable research package called a Capsule. The Code Ocean Capsule format is open, exportable, reproducible, and interoperable. Each capsule is versioned and contains code, data, environment, and the associated results. Our CodeOcean capsule is available here:
+
+https://doi.org/10.24433/CO.9900774.v1
+
+<p align="center">
+<img src="https://github.com/Sizeless/ReplicationPackage/blob/main/images/Codeocean.png?raw=true" width="800">
+</p>
+
+### Viewing the reproducible results
+The results produced by the last reproducible run of the capsule, can be accessed in the area labled as "Results used in paper". This contains all results/tables/figures shown in the manuscript and some additional data, such as the plots from figure 5 for all evaluation functions.
+
+If you want to rerun the compuations that generate the results/tables/figures from the manuscript, press the button labled as "Rerun all computation" in the screenshot above.
+
+### Viewing the data from the manuscript
+The CodeOcean capsule also contains all data that was collected for this manuscript in the folder labled as "Data" in the screenshot above. It contains the following data:
+
+* `duration-calibration`: data used to determine how long each measurement for the synthetic dataset should be to guarantee stable metrics.
+* `motivating-example`: data from the motivating example (Figure 1), kindly provided to us by Alex Casalboni.
+* `validation`: Ten repretitons of measurements obtained for our three case study applications, obtained using the measurement harnesses described above.
+* `dataset_with_labels`: Synthetic training dataset covering 2.000 application/12.000 measurements obtained using the synthetic function generator as described above.
+
+
+### Adapting the capsule
+Aside from enabling simple reproducability, the CodeOcean capsule also allows to adapt the analysis. As an example, let's say we are interested in how often our approach selects the optimal memorysize for a tradeoff factor of 0.6 (only shown in the paper for 0.75, 0.5, and 0.25) and what the resulting cost/performance benefits would be. This requires only to edit the `evaluation.py` file to set the variable `tradeoff` to 0.6 (no need to be shy, CodeOcean creates a private copy of the capsule when you start editing) and press the "Reproducible Run" button. After some computation time, there will be a new folder in the right bar, that shows the results for this run.
