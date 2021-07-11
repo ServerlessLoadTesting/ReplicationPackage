@@ -58,7 +58,7 @@ To execute the measurements, run the following commands in the folder `AirlineBo
 ```
 docker build --build-arg AWS_ACCESS_KEY_ID=YOUR_PUBLIC_KEY --build-arg AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY . -t airlinebooking
 docker run -d --name airlinebooking airlinebooking
-docker exec -it airlinebooking bash /ReplicationPackage/FacialRecognition/runner.sh
+docker exec -it airlinebooking bash /ReplicationPackage/runner.sh
 ```
 
 Make sure to replace `YOUR_PUBLIC_KEY` and`YOUR_SECRET_KEY` with your [AWS Credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html). This first builds the docker container for the experiment environment, starts the docker container, and then starts the experiment runner. Every experiment execution takes around 3-4h, so depending on the configured experiments this process can run for multiple days
