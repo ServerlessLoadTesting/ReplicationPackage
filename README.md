@@ -97,6 +97,7 @@ The CodeOcean capsule also contains all data that was collected for this manuscr
 The analysis is conducted using the following scripts:
 
 * `RQ1_analyze_cold_starts.py`: This scripts extracts the cold start information out of the raw data for subsequent analysis and saves it in the file `coldstart_report.csv`.
+
 * `RQ1_plot_cold_starts.py`: Analysis of coldstart distribution across experiments, and impact on performance test result. The information presented in Table 2 in the paper is saved to `coldstarts.txt`. Requires the file `coldstart_report.csv` to be available.
 * `RQ1_analyze_warmup.py`: This scripts extracts the warmup period information out of the raw data for subsequent analysis and saves it in the file `warmup_report.`
 * `RQ1_plot_warmup_period.py`: Analysis of the maximum warmup period observed in our experiments, saves the information presented in Table 1 in the paper in the file `warmup-with-coldstarts.csv. Requires the file `warmup_report.csv` to be available.
