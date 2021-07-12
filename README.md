@@ -94,4 +94,13 @@ The CodeOcean capsule also contains all data that was collected for this manuscr
 * `longitudinal_data.csv`: Dataset from our longitudinal study consists of three measurement repetitions with 100 req/s and 512 MB every day at 19:00 from August 20th, 2020 to June 20th, 2021. This dataset is preprocessed as the raw dataset was too large for CodeOcean. The raw dataset is available upon request from the first author.
 
 ### Analysis Scripts
+The analysis is conducted using the following scripts:
 
+* `RQ1_analyze_cold_starts.py`: This scripts extracts the cold start information out of the raw data for subsequent analysis and saves it in the file `coldstart_report.csv`.
+* `RQ1_plot_cold_starts.py`: Analysis of coldstart distribution across experiments, and impact on performance test result. The information presented in Table 2 in the paper is saved to `coldstarts.txt`. Requires the file `coldstart_report.csv` to be available.
+* `RQ1_analyze_warmup.py`: This scripts extracts the warmup period information out of the raw data for subsequent analysis and saves it in the file `warmup_report.`
+* `RQ1_plot_warmup_period.py`: Analysis of the maximum warmup period observed in our experiments, saves the information presented in Table 1 in the paper in the file `warmup-with-coldstarts.csv. Requires the file `warmup_report.csv` to be available.
+* `RQ1_plot_warmup_coldstart.py`: Analysis of the maximum warmup period observed in our experiments after the exclusion of cold starts, saves the information presented in Table 3 in the paper in the file `warmup-without-coldstarts.csv`. Requires the files `coldstart_report.csv` and ` warmup_report.csv` to be available.
+* `RQ2_analyze_variance_between_runs.py`: This scripts extracts the information about the variance between runs from the raw data for subsequent analysis and saves it in the file `variance_acrossruns_report.csv`.
+* `RQ2_plot_responsetime.py`: Generates Figure 3 from the paper based on the file `variance_acrossruns_report.csv` and saves it to `response-time-example.pdf`.
+* `RQ2_analyze_variance_between_runs.py: Generates Figure 2 and Figure 4 from the paper and runs the associated statistical tests presented in the text. The results of the statistical tests can be found in the `output` file and the figures in the files `variance_heatmap_heuristic.pdf` and ``coefficient_variation_per_workload.pdf`
