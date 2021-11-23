@@ -64,5 +64,7 @@ RUN dos2unix /ReplicationPackage/files/generateCognito.js /ReplicationPackage/fi
 
 RUN chmod +x /ReplicationPackage/meta-run.sh /ReplicationPackage/run.sh /ReplicationPackage/files/* /ReplicationPackage/load/generateConstantLoad.sh
 
+RUN sed -i 's|nodejs10.x|nodejs12.x|g' /usr/lib/node_modules/\@aws-amplify/cli/node_modules/amplify-provider-awscloudformation/lib/update-idp-roles-cfn.json
+
 WORKDIR /ReplicationPackage
 CMD [ "sleep", "1000000000000000000000" ]
