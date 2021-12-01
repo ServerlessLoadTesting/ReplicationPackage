@@ -9,7 +9,94 @@ Description: >
   Creates Custom Metrics for Memory Used, Size, and Estimated Cost for each function and version
   Also creates custom metrics based on "MONITORING|<metric_value>|<metric_unit>|<metric_name>|<namespace>|<dimensions>" format
 
+Parameters:
+  EventSourceType:
+    Type: String
+    Default: 'Kinesis'
+    Description: >
+      What's the event source you will intend to use?
+      If logs are pushed from CloudWatch Logs to Lambda directly, then use 'Lambda'.
+      If logs are pushed to a Kinesis Stream first, then use 'Kinesis'.
+      Other event sources are not supported (yet).
+    AllowedValues:
+      - 'Lambda'
+      - 'Kinesis'
+  TimeoutSeconds:
+    Type: Number
+    Default: 30
+    MaxValue: 900
+    MinValue: 1
+    Description: >
+      (optional) Timeout for the Lambda function that would ship metrics to CloudWatch. Defaults to 30s.
+  KinesisStreamBatchSize:
+    Type: Number
+    Default: 100
+    Description: >
+      (optional) Only relevant to the Kinesis event source type. The batch size to use for the
+      subscription.
+  RecordLambdaUsageMetrics:
+    Type: String
+    Default: "true"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: >
+      (optional) Whether to collect Lambda usage metrics (i.e. billed duration, memory size,
+      max memory used) from the logs and turn them into metrics.
+      Allowed values are "true" or "false".
+  RecordLambdaCostMetric:
+    Type: String
+    Default: "true"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: >
+      (optional) Whether to report estimated cost for Lambda functions as metrics.
+      Allowed values are "true" or "false".
+  RecordLambdaColdStartMetric:
+    Type: String
+    Default: "true"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: >
+      (optional) Whether to report init duration for Lambda functions as metrics.
+      Allowed values are "true" or "false".
+Conditions:
+  IsLambda: !Equals [!Ref EventSourceType, 'Lambda']
+  IsKinesis: !Equals [!Ref EventSourceType, 'Kinesis']
+
+Globals:
+  Function:
+    Timeout: !Ref TimeoutSeconds
+    Runtime: nodejs12.x
+    MemorySize: 128
+    Environment:
+      Variables:
+        RECORD_LAMBDA_USAGE_METRICS: !Ref RecordLambdaUsageMetrics
+        RECORD_LAMBDA_COST_METRIC: !Ref RecordLambdaCostMetric
+        RECORD_LAMBDA_COLD_START_METRIC: !Ref RecordLambdaColdStartMetric
+
+
 Resources:
+  ConvertLambda:
+    Type: AWS::Serverless::Function
+    Condition: IsLambda
+    Properties:
+      CodeUri: functions/
+      Handler: index.handler
+      Policies:
+        - Statement:
+            Effect: Allow
+            Action: cloudwatch:PutMetricData
+            Resource: "*"
+
+  ConvertLambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: IsLambda
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ConvertLambda}
+
   # Kinesis Stream that will receive Logs from CloudWatch Logs
   LogProcessingStream:
     Type: AWS::Kinesis::Stream
@@ -17,35 +104,37 @@ Resources:
       RetentionPeriodHours: 48
       ShardCount: 1
 
-  # SAR App that will consume from Kinesis stream and create Custom Metrics
-  ProcessCustomMetricsAsync:
-    Type: AWS::Serverless::Application
+  ConvertKinesis:
+    Type: AWS::Serverless::Function
+    Condition: IsKinesis
     Properties:
-      Location:
-        ApplicationId: arn:aws:serverlessrepo:us-east-1:374852340823:applications/async-custom-metrics
-        SemanticVersion: 1.7.0
-      Parameters:
-        # What's the event source you will intend to use? If logs are pushed from CloudWatch Logs to Lambda directly, then use 'Lambda'. If logs are pushed to a Kinesis Stream first, then use 'Kinesis'. Other event sources are not supported (yet).
-        EventSourceType: "Kinesis" # Uncomment to override default value
-        # (optional) Only relevant to the Kinesis event source type. The ARN to the Kinesis stream to  subscribe the function to.
-        KinesisStreamArn: !Sub ${LogProcessingStream.Arn} # Uncomment to override default value
-        # (optional) Only relevant to the Kinesis event source type. The batch size to use for the  subscription.
-        # KinesisStreamBatchSize: '100' # Uncomment to override default value
-        # (optional) Timeout for the Lambda function that would ship metrics to CloudWatch. Defaults to 30s.
-        # TimeoutSeconds: '30' # Uncomment to override default value
-        # (optional) Whether to report init duration for Lambda functions as metrics. Allowed values are "true" or "false".
-        # RecordLambdaColdStartMetric: 'true' # Uncomment to override default value
-        # (optional) Whether to report estimated cost for Lambda functions as metrics. Allowed values are "true" or "false".
-        # RecordLambdaCostMetric: 'true' # Uncomment to override default value
-        # (optional) Whether to collect Lambda usage metrics (i.e. billed duration, memory size,  max memory used) from the logs and turn them into metrics. Allowed values are "true" or "false".
-        # RecordLambdaUsageMetrics: 'true' # Uncomment to override default value
+      CodeUri: functions/
+      Handler: index.handler
+      Policies:
+        - Statement:
+            Effect: Allow
+            Action: cloudwatch:PutMetricData
+            Resource: "*"
+      Events:
+        Stream:
+          Type: Kinesis
+          Properties:
+            Stream: !GetAtt LogProcessingStream.Arn
+            BatchSize: !Ref KinesisStreamBatchSize
+            StartingPosition: LATEST
+
+  ConvertKinesisLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: IsKinesis
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ConvertKinesis}
 
   AutoSetLogGroupsRetention:
     Type: AWS::Serverless::Application
     Properties:
       Location:
         ApplicationId: arn:aws:serverlessrepo:us-east-1:374852340823:applications/auto-set-log-group-retention
-        SemanticVersion: 1.4.0
+        SemanticVersion: 1.5.0
       Parameters:
         # The number of days to retain logs in CloudWatch Logs for.
         RetentionDays: "14" # Uncomment to override default value
@@ -56,7 +145,7 @@ Resources:
     Properties:
       Location:
         ApplicationId: arn:aws:serverlessrepo:us-east-1:374852340823:applications/auto-subscribe-log-group-to-arn
-        SemanticVersion: 1.11.1
+        SemanticVersion: 1.12.0
       Parameters:
         # The ARN of the Lambda function or Kinesis stream to subscribe a newly created CloudWatch log group to
         DestinationArn: !Sub ${LogProcessingStream.Arn}
@@ -69,6 +158,22 @@ Resources:
         FilterPattern: "?REPORT ?MONITORING"
 
 Outputs:
+  ConvertLambdaFunctionName:
+    Description: Name of the Lambda function name
+    Value:
+      !If [
+        IsLambda,
+        !Ref ConvertLambda,
+        !Ref ConvertKinesis
+      ]
+  ConvertLambdaFunctionArn:
+    Description: ARN of the Lambda function name
+    Value:
+      !If [
+        IsLambda,
+        !GetAtt ConvertLambda.Arn,
+        !GetAtt ConvertKinesis.Arn
+      ]
   LogProcessingStream:
     Value: !Sub ${LogProcessingStream.Arn}
     Description: Kinesis Stream used for log processing

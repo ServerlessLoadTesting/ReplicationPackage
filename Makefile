@@ -111,8 +111,13 @@ deploy.loyalty: ##=> Deploy loyalty service using SAM and TypeScript build
 deploy.log-processing: ##=> Deploy Log Processing for CloudWatch Logs
 	$(info [*] Packaging and deploying Loyalty service...)
 	cd src/backend/log-processing && \
+		npm install && \
+		sam build && \
+		sam package \
+			--s3-bucket $${DEPLOYMENT_BUCKET_NAME} \
+			--output-template-file packaged.yaml && \
 		sam deploy \
-			--template-file template.yaml \
+			--template-file packaged.yaml \
 			--stack-name $${STACK_NAME}-log-processing-$${AWS_BRANCH} \
 			--capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
 
